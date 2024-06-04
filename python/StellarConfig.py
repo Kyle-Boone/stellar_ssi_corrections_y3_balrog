@@ -48,7 +48,8 @@ def feh2z( feh):
     
 
 # Hyperparameter setup
-res = 4096 # Resolution for corrections, the higher resolution for calculations.
+res = 4096 # Higher resolution for calculations.
+nsideCourse = 512 # Resolution for final corrections.
 numBins = 100 # Splitting up the full sky in calculations into this many pieces.
 classCutoff = 1.5 # Class cut between stars and galaxies.
 gCut = 27 # Cutoff for g magnitude.
@@ -115,13 +116,13 @@ for i in np.arange(numMagBins):
     galaDetAsGalaTrainFiles.append(galaDir + 'Gala_Det_As_Gala_Train_Bin' + str(i+1) + '.fits')
     galaDetAsGalaProbFiles.append(galaDir + 'Gala_Det_As_Gala_Prob_Bin' + str(i+1) + '.fits')
 
-galaDetAsAnyExtrFiles = []
-galaDetAsAnyTrainFiles =  []
-galaDetAsAnyProbFiles = []
-for i in np.arange(numMagBins):
-    galaDetAsAnyExtrFiles.append(galaDir + 'Gala_Det_As_Any_Extr_Bin' + str(i+1) + '.fits')
-    galaDetAsAnyTrainFiles.append(galaDir + 'Gala_Det_As_Any_Train_Bin' + str(i+1) + '.fits')
-    galaDetAsAnyProbFiles.append(galaDir + 'Gala_Det_As_Any_Prob_Bin' + str(i+1) + '.fits')
+# galaDetAsAnyExtrFiles = []
+# galaDetAsAnyTrainFiles =  []
+# galaDetAsAnyProbFiles = []
+# for i in np.arange(numMagBins):
+#     galaDetAsAnyExtrFiles.append(galaDir + 'Gala_Det_As_Any_Extr_Bin' + str(i+1) + '.fits')
+#     galaDetAsAnyTrainFiles.append(galaDir + 'Gala_Det_As_Any_Train_Bin' + str(i+1) + '.fits')
+#     galaDetAsAnyProbFiles.append(galaDir + 'Gala_Det_As_Any_Prob_Bin' + str(i+1) + '.fits')
     
 # The following is a directory for training and probability data for the Balrog delta stars.
 starDir = stellarDir + 'Stars/'
@@ -150,13 +151,13 @@ for i in np.arange(numMagBins):
     starDetAsGalaTrainFiles.append(starDir + 'Star_Det_As_Gala_Train_Bin' + str(i+1) + '.fits')
     starDetAsGalaProbFiles.append(starDir + 'Star_Det_As_Gala_Prob_Bin' + str(i+1) + '.fits')
 
-starDetAsAnyExtrFiles = []
-starDetAsAnyTrainFiles =  []
-starDetAsAnyProbFiles = []
-for i in np.arange(numMagBins):
-    starDetAsAnyExtrFiles.append(starDir + 'Star_Det_As_Any_Extr_Bin' + str(i+1) + '.fits')
-    starDetAsAnyTrainFiles.append(starDir + 'Star_Det_As_Any_Train_Bin' + str(i+1) + '.fits')
-    starDetAsAnyProbFiles.append(starDir + 'Star_Det_As_Any_Prob_Bin' + str(i+1) + '.fits')
+# starDetAsAnyExtrFiles = []
+# starDetAsAnyTrainFiles =  []
+# starDetAsAnyProbFiles = []
+# for i in np.arange(numMagBins):
+#     starDetAsAnyExtrFiles.append(starDir + 'Star_Det_As_Any_Extr_Bin' + str(i+1) + '.fits')
+#     starDetAsAnyTrainFiles.append(starDir + 'Star_Det_As_Any_Train_Bin' + str(i+1) + '.fits')
+#     starDetAsAnyProbFiles.append(starDir + 'Star_Det_As_Any_Prob_Bin' + str(i+1) + '.fits')
     
 # Files with information on gold objects.
 goldStarDir = stellarDir + 'GoldObjects/Stars/'
@@ -177,7 +178,8 @@ for i in np.arange(numMagBins):
     goldMoreInfoGalaFiles.append(goldGalaDir + 'More_Info_Bin' + str(i+1) + '.fits')
     
 # Overall multiplicative corrections on valid pix.
-correctionFile = stellarDir + 'Correction/MultiplicativeCorrections.fits'
+starCorrectionFile = stellarDir + 'Correction/StarCorrections.fits'
+galaCorrectionFile = stellarDir + 'Correction/GalaxyCorrections.fits'
 
 # Calibration information for different magnitude bins.
 calibrationFile = stellarDir + 'Calibration/Calibrations.fits'
