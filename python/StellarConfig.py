@@ -187,12 +187,17 @@ calibrationFile = stellarDir + 'Calibration/Calibrations.fits'
 # Information on phoenix position.
 phoenixFile = stellarDir + 'Phoenix_Data.fits'
 
+# Files from here on contain raw data and are not written to.
+
 # Assorted data files.
 detBalrStarFile = '/afs/hep.wisc.edu/bechtol-group/MegansThings/balrog_detection_catalog_sof_run2_stars_v1.4_avg_added_match_flags.fits'
 matBalrStarFile = '/afs/hep.wisc.edu/bechtol-group/MegansThings/balrog_matched_catalog_sof_run2_stars_v1.4.fits'
 
 detBalrGalaFile = '/hdfs/bechtol/balrog/y3/balrog_detection_catalog_sof_y3-merged_v1.2.fits'
 matBalrGalaFile = '/hdfs/bechtol/balrog/y3/balrog_matched_catalog_sof_y3-merged_v1.2.fits'
+
+# FracDet File
+fracFile = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/fracdet/y3a2_griz_o.4096_t.32768_coverfoot_EQU.fits.gz'
 
 # Files containing the deep field data.
 deepFiles = ['/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000001.fits', 

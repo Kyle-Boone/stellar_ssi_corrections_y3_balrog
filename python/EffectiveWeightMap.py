@@ -5,9 +5,6 @@ from astropy.table import Table
 import healpy as hp
 import StellarConfig as strConfig
 
-# Path to fracDet file
-fracFile = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/fracdet/y3a2_griz_o.4096_t.32768_coverfoot_EQU.fits.gz'
-
 # Where final correction info will be stored
 starCorrectionFile = strConfig.starCorrectionFile
 galaCorrectionFile = strConfig.galaCorrectionFile
@@ -33,6 +30,9 @@ starDetAsGalaProbFiles = strConfig.starDetAsGalaProbFiles
 galaProbFiles = strConfig.galaProbFiles
 galaDetAsStarProbFiles = strConfig.galaDetAsStarProbFiles
 galaDetAsGalaProbFiles = strConfig.galaDetAsGalaProbFiles
+
+# FracDet file
+fracFile = strConfig.fracFile
 
 # Calibration information
 calibrationFile = strConfig.calibrationFile
