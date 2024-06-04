@@ -83,10 +83,6 @@ galaDetAsGalaExtrFiles = strConfig.galaDetAsGalaExtrFiles
 galaDetAsGalaTrainFiles = strConfig.galaDetAsGalaTrainFiles
 galaDetAsGalaProbFiles = strConfig.galaDetAsGalaProbFiles
 
-galaDetAsAnyExtrFiles = strConfig.galaDetAsAnyExtrFiles
-galaDetAsAnyTrainFiles = strConfig.galaDetAsAnyTrainFiles
-galaDetAsAnyProbFiles = strConfig.galaDetAsAnyProbFiles
-
 # Star correction files.
 starExtrFiles = strConfig.starExtrFiles
 starTrainFiles = strConfig.starTrainFiles
@@ -99,10 +95,6 @@ starDetAsStarProbFiles = strConfig.starDetAsStarProbFiles
 starDetAsGalaExtrFiles = strConfig.starDetAsGalaExtrFiles
 starDetAsGalaTrainFiles = strConfig.starDetAsGalaTrainFiles
 starDetAsGalaProbFiles = strConfig.starDetAsGalaProbFiles
-
-starDetAsAnyExtrFiles = strConfig.starDetAsAnyExtrFiles
-starDetAsAnyTrainFiles = strConfig.starDetAsAnyTrainFiles
-starDetAsAnyProbFiles = strConfig.starDetAsAnyProbFiles
 
 # Files with information on Y3 Gold objects.
 goldStarFiles = strConfig.goldStarFiles
