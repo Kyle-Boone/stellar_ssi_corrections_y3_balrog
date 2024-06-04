@@ -288,7 +288,7 @@ def fullSky(pixFile, condFiles, trainDataFiles, fullSkyProbFiles, extrFiles, res
         # This reads in the training data.
         xValues = fitsio.read(trainDataFiles[i][0:-5] + '_X_Values.fits')
         aveAcc = loadtxt(trainDataFiles[i][0:-5] + '_Ave_Acc.csv', delimiter=',')
-        print(aveAcc) # This is used to ensure the code has made it to this point.
+        # print(aveAcc) # This was used to ensure the code has made it to this point.
         indices = loadtxt(trainDataFiles[i][0:-5] + '_Indices.csv', delimiter=',').astype(int)
         
         # Reformatting indices so that the following will work for any size of indices.

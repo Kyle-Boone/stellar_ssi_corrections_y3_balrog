@@ -48,7 +48,7 @@ def feh2z( feh):
     
 
 # Hyperparameter setup
-res = 4096 # Resolution for corrections.
+res = 4096 # Resolution for corrections, the higher resolution for calculations.
 numBins = 100 # Splitting up the full sky in calculations into this many pieces.
 classCutoff = 1.5 # Class cut between stars and galaxies.
 gCut = 27 # Cutoff for g magnitude.
@@ -56,6 +56,7 @@ numMagBins = 3 # Number of magnitude bins.
 magBins = [0, 22.9, 23.9, 24.5] # r Band magnitude bins.
 cutOffPercent = 0.01 # All deviations have to be below this for training to end.
 binNum = 10 # Number of bins used to calculate out functions.
+matchDist = 0.5 # Arcsecond distance for deep field calibration spatial object matching.
     
 # Isochrone setup
 mu = 16.2

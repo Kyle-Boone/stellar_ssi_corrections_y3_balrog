@@ -283,7 +283,7 @@ def fullSkyDet(pixFile, condFiles, trainDataFiles, fullSkyProbFiles, extrFiles, 
     for i in range(len(trainDataFiles)):
         # This reads in the training data.
         aveDet = loadtxt(trainDataFiles[i][0:-5] + '_Ave_Det.csv', delimiter=',')
-        print(aveDet) # This is used to ensure the code has made it to this point.
+        # print(aveDet) # This was used to ensure the code has made it to this point.
         indices = loadtxt(trainDataFiles[i][0:-5] + '_Indices.csv', delimiter=',').astype(int)
         xValues = fitsio.read(trainDataFiles[i][0:-5] + '_X_Values.fits')
         
