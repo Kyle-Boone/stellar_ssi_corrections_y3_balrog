@@ -392,7 +392,7 @@ def getMatGalas(path, mu, res, deepFiles, matGalaFile, detGalaFile, validPixFile
                           (FOOTPRINT == 1) & 
                           (ARCSECONDS < 2) &
                           (CLASS >= 0) &
-                          (CLASS <= 3)
+                          (CLASS <= 3) &
                           (GMAG < gCut))[0]
 
     ID = ID[cutIndices]
