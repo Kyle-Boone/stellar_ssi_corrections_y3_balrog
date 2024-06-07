@@ -27,23 +27,23 @@ res = strConfig.res
 numMagBins = strConfig.numMagBins
 numBins = strConfig.numBins
 classCutoff = strConfig.classCutoff
-goldCols = strConfig.goldCols
+goldCols = Config.goldCols
 gCut = strConfig.gCut
 magBins = strConfig.magBins
 cutOffPercent = strConfig.cutOffPercent
 binNum = strConfig.binNum
 
-deepCols = strConfig.deepCols
+deepCols = Config.deepCols
 
 path = strConfig.path
 mu = strConfig.mu
 
-matBalrGalaFile = strConfig.matBalrGalaFile
-detBalrGalaFile = strConfig.detBalrGalaFile
-matBalrStarFile = strConfig.matBalrStarFile
-detBalrStarFile = strConfig.detBalrStarFile
+matBalrGalaFile = Config.matBalrGalaFile
+detBalrGalaFile = Config.detBalrGalaFile
+matBalrStarFile = Config.matBalrStarFile
+detBalrStarFile = Config.detBalrStarFile
 
-deepFiles = strConfig.deepFiles
+deepFiles = Config.deepFiles
 pixFile = strConfig.pixFile
 condFiles = strConfig.condFiles
 

@@ -31,25 +31,21 @@ res = strConfig.res
 numMagBins = strConfig.numMagBins
 numBins = strConfig.numBins
 classCutoff = strConfig.classCutoff
-goldCols = strConfig.goldCols
 gCut = strConfig.gCut
 magBins = strConfig.magBins
 cutOffPercent = strConfig.cutOffPercent
 binNum = strConfig.binNum
 matchDist = strConfig.matchDist
 
-# Columns necessary from the deep fields.
-deepCols = strConfig.deepCols
-
 # Isochrone configuration.
 path = strConfig.path
 mu = strConfig.mu
 
 # Original balrog data files.
-matBalrGalaFile = strConfig.matBalrGalaFile
-detBalrGalaFile = strConfig.detBalrGalaFile
-matBalrStarFile = strConfig.matBalrStarFile
-detBalrStarFile = strConfig.detBalrStarFile
+matBalrGalaFile = Config.matBalrGalaFile
+detBalrGalaFile = Config.detBalrGalaFile
+matBalrStarFile = Config.matBalrStarFile
+detBalrStarFile = Config.detBalrStarFile
 
 # Galaxy information files.
 matGalaFile = strConfig.matGalaFile
@@ -60,11 +56,12 @@ matStarFile = strConfig.matStarFile
 detStarAllPosFile = strConfig.detStarAllPosFile
 
 # Originl deep field data.
-deepFiles = strConfig.deepFiles
+deepFiles = Config.deepFiles
+deepCols = Config.deepCols
 
 # Original survey property files.
-origCondFiles = strConfig.origCondFiles
-stelFile = strConfig.stelFile
+origCondFiles = Config.origCondFiles
+stelFile = Config.stelFile
 
 # Valid pixel and updated survey property files.
 pixFile = strConfig.pixFile
@@ -97,11 +94,12 @@ starDetAsGalaTrainFiles = strConfig.starDetAsGalaTrainFiles
 starDetAsGalaProbFiles = strConfig.starDetAsGalaProbFiles
 
 # Files with information on Y3 Gold objects.
+goldObjectsDir = Config.goldObjectsDir
+goldObjectsFiles = Config.goldObjectsFiles
+goldCols = Config.goldCols
+
 goldStarFiles = strConfig.goldStarFiles
 goldGalaFiles = strConfig.goldGalaFiles
-
-goldObjectsDir = strConfig.goldObjectsDir
-goldObjectsFiles = strConfig.goldObjectsFiles
 
 goldMoreInfoStarFiles = strConfig.goldMoreInfoStarFiles
 goldMoreInfoGalaFiles = strConfig.goldMoreInfoGalaFiles
