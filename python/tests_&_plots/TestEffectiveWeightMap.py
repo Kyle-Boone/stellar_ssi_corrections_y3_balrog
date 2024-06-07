@@ -21,6 +21,8 @@ import matplotlib
 matplotlib.style.use('des_dr1')
 
 res = strConfig.res
+nsideCourse = strConfig.nsideCourse
+fracPer = strConfig.fracPer
 numMagBins = strConfig.numMagBins
 numBins = strConfig.numBins
 classCutoff = strConfig.classCutoff
@@ -106,14 +108,16 @@ galaDetAsStarProb = np.array(galaDetAsStarProb, dtype = object)
 fracFile = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/fracdet/y3a2_griz_o.4096_t.32768_coverfoot_EQU.fits.gz'
 fracData = fitsio.read(fracFile)
 
-# This degrades it to 512 resolution and applies a cut to where there is at least 75% coverage.
+# This degrades it to nsideCourse resolution and applies a cut to where there is at least 75% coverage.
 fracPix = fracData['PIXEL']
 fracDet = fracData['SIGNAL']
 origFracMap = np.full(12*(4096**2), 0.0)
 origFracMap[fracPix] = fracDet
+if res != 4096:
+    origFracMap = hp.ud_grade(origFracMap, res, order_in = 'NESTED', order_out = 'NESTED')
 origFracMap[~pixCheck] = 0.0 # If we aren't looking at the pixel, effective cover of 0%
-fracMap = hp.ud_grade(origFracMap, 512, order_in = 'NESTED', order_out = 'NESTED')
-fracPix = np.where(fracMap >= 0.5)[0]
+fracMap = hp.ud_grade(origFracMap, nsideCourse, order_in = 'NESTED', order_out = 'NESTED')
+fracPix = np.where(fracMap >= fracPer)[0]
 
 deClaStar = []
 
@@ -121,9 +125,9 @@ for i in range(len(claStar)):
     
     fullClaStar = np.zeros(12*(res**2))
     fullClaStar[validPix] = claStar[i]
-    deClaStarInd = hp.ud_grade(fullClaStar, 512, order_in = 'NESTED', order_out = 'NESTED')
+    deClaStarInd = hp.ud_grade(fullClaStar, nsideCourse, order_in = 'NESTED', order_out = 'NESTED')
     
-    deClaStar.append((deClaStarInd[fracPix] / fracMap[fracPix]) * ((res / 512)**2))
+    deClaStar.append((deClaStarInd[fracPix] / fracMap[fracPix]) * ((res / nsideCourse)**2))
     
 deClaStar = np.array(deClaStar, dtype = object)
 
@@ -133,9 +137,9 @@ for i in range(len(claGala)):
     
     fullClaGala = np.zeros(12*(res**2))
     fullClaGala[validPix] = claGala[i]
-    deClaGalaInd = hp.ud_grade(fullClaGala, 512, order_in = 'NESTED', order_out = 'NESTED')
+    deClaGalaInd = hp.ud_grade(fullClaGala, nsideCourse, order_in = 'NESTED', order_out = 'NESTED')
     
-    deClaGala.append((deClaGalaInd[fracPix] / fracMap[fracPix]) * ((res / 512)**2))
+    deClaGala.append((deClaGalaInd[fracPix] / fracMap[fracPix]) * ((res / nsideCourse)**2))
     
 deClaGala = np.array(deClaGala, dtype = object)
 
@@ -145,7 +149,7 @@ for i in range(len(starDetAsStarProb)):
     fullProb = np.zeros(12*(res**2))
     fullProb[validPix] = starDetAsStarProb[i] * origFracMap[validPix]
     
-    deFullProb = hp.ud_grade(fullProb, 512, order_in = 'NESTED', order_out = 'NESTED')
+    deFullProb = hp.ud_grade(fullProb, nsideCourse, order_in = 'NESTED', order_out = 'NESTED')
     deStarDetAsStarProb.append(deFullProb[fracPix] / fracMap[fracPix])
     
 deStarDetAsStarProb = np.array(deStarDetAsStarProb, dtype = object)
@@ -156,7 +160,7 @@ for i in range(len(starCorrProb)):
     fullProb = np.zeros(12*(res**2))
     fullProb[validPix] = starCorrProb[i] * origFracMap[validPix]
     
-    deFullProb = hp.ud_grade(fullProb, 512, order_in = 'NESTED', order_out = 'NESTED')
+    deFullProb = hp.ud_grade(fullProb, nsideCourse, order_in = 'NESTED', order_out = 'NESTED')
     deStarCorrProb.append(deFullProb[fracPix] / fracMap[fracPix])
     
 deStarCorrProb = np.array(deStarCorrProb, dtype = object)
@@ -167,7 +171,7 @@ for i in range(len(galaDetAsStarProb)):
     fullProb = np.zeros(12*(res**2))
     fullProb[validPix] = galaDetAsStarProb[i] * origFracMap[validPix]
     
-    deFullProb = hp.ud_grade(fullProb, 512, order_in = 'NESTED', order_out = 'NESTED')
+    deFullProb = hp.ud_grade(fullProb, nsideCourse, order_in = 'NESTED', order_out = 'NESTED')
     deGalaDetAsStarProb.append(deFullProb[fracPix] / fracMap[fracPix])
     
 deGalaDetAsStarProb = np.array(deGalaDetAsStarProb, dtype = object)
@@ -178,7 +182,7 @@ for i in range(len(galaCorrProb)):
     fullProb = np.zeros(12*(res**2))
     fullProb[validPix] = galaCorrProb[i] * origFracMap[validPix]
     
-    deFullProb = hp.ud_grade(fullProb, 512, order_in = 'NESTED', order_out = 'NESTED')
+    deFullProb = hp.ud_grade(fullProb, nsideCourse, order_in = 'NESTED', order_out = 'NESTED')
     deGalaCorrProb.append(deFullProb[fracPix] / fracMap[fracPix])
     
 deGalaCorrProb = np.array(deGalaCorrProb, dtype = object)
@@ -211,15 +215,15 @@ for i in np.arange(numMagBins):
     
 corrStar = np.sum(corrStarBins, axis = 0)
 
-fullOrigStar = np.full(12*(512**2), hp.UNSEEN)
+fullOrigStar = np.full(12*(nsideCourse**2), hp.UNSEEN)
 fullOrigStar[fracPix] = origStar
 fullOrigStar[np.where(fullOrigStar <= 0)[0]] = hp.UNSEEN
 
-fullCorrStar = np.full(12*(512**2), hp.UNSEEN)
+fullCorrStar = np.full(12*(nsideCourse**2), hp.UNSEEN)
 fullCorrStar[fracPix] = corrStar
 fullCorrStar[np.where(fullOrigStar <= 0)[0]] = hp.UNSEEN
 
-starRatio = np.full(12*(512**2), hp.UNSEEN)
+starRatio = np.full(12*(nsideCourse**2), hp.UNSEEN)
 starRatio[np.where(fullOrigStar > 0)[0]] = fullCorrStar[np.where(fullOrigStar > 0)[0]] / fullOrigStar[np.where(fullOrigStar > 0)[0]]
 
 weightFile = stellarDir + 'Effective_Weights_'+str(seed)+'.fits'

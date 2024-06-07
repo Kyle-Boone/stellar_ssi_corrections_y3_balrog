@@ -12,6 +12,7 @@ galaCorrectionFile = strConfig.galaCorrectionFile
 # Hyperparameters
 res = strConfig.res
 nsideCourse = strConfig.nsideCourse
+fracPer = strConfig.fracPer
 numMagBins = strConfig.numMagBins
 
 # Valid pixels
@@ -106,9 +107,11 @@ fracPix = fracData['PIXEL']
 fracDet = fracData['SIGNAL']
 origFracMap = np.full(12*(4096**2), 0.0)
 origFracMap[fracPix] = fracDet
+if res != 4096:
+    origFracMap = hp.ud_grade(origFracMap, res, order_in = 'NESTED', order_out = 'NESTED')
 origFracMap[~pixCheck] = 0.0 # If we aren't looking at the pixel, effective coverage of 0%
 fracMap = hp.ud_grade(origFracMap, nsideCourse, order_in = 'NESTED', order_out = 'NESTED')
-fracPix = np.where(fracMap >= 0.5)[0]
+fracPix = np.where(fracMap >= fracPer)[0]
 
 # Degrading counts and probabilities
 deClaStar = []

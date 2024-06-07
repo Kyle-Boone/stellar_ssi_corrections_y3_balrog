@@ -1,4 +1,5 @@
 import numpy as np
+from os import listdir
 
 # Folder containing every survey condition map.
 folder ='/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/'

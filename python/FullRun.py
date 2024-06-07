@@ -23,11 +23,12 @@ from Y3Objects import *
 from Calibration import *
 
 # Cycle limit for relative detection rate and classification probability calculations respectively.
-detIndLim = 300
-claIndLim = 150
+detIndLim = strConfig.detIndLim
+claIndLim = strConfig.claIndLim
 
 # Define hyperparameters.
 res = strConfig.res
+perCovered = strConfig.perCovered
 numMagBins = strConfig.numMagBins
 numBins = strConfig.numBins
 classCutoff = strConfig.classCutoff
@@ -108,7 +109,7 @@ goldMoreInfoGalaFiles = strConfig.goldMoreInfoGalaFiles
 calibrationFile = strConfig.calibrationFile
 
 # Get valid pixels and cropped survey properties.
-validPixCropData(origCondFiles, stelFile, pixFile, condFiles)
+validPixCropData(origCondFiles, stelFile, pixFile, condFiles, res, perCovered)
 
 validPix = fitsio.read(pixFile)['PIXEL']
 pixCheck = np.full(12*(res**2), False, dtype = bool)
