@@ -178,3 +178,30 @@ stellarDens = 91
 __files__.append(folder + 'stellar_density/psf_stellar_density_fracdet_binned_256_nside_4096_cel.fits.gz')
 
 files = np.copy(np.array(__files__))
+
+origCondFiles = files[:-1]
+stelFile = files[-1]
+
+# Original Balrog Files.
+detBalrStarFile = '/afs/hep.wisc.edu/bechtol-group/MegansThings/balrog_detection_catalog_sof_run2_stars_v1.4_avg_added_match_flags.fits'
+matBalrStarFile = '/afs/hep.wisc.edu/bechtol-group/MegansThings/balrog_matched_catalog_sof_run2_stars_v1.4.fits'
+
+detBalrGalaFile = '/hdfs/bechtol/balrog/y3/balrog_detection_catalog_sof_y3-merged_v1.2.fits'
+matBalrGalaFile = '/hdfs/bechtol/balrog/y3/balrog_matched_catalog_sof_y3-merged_v1.2.fits'
+
+# FracDet File.
+fracFile = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/fracdet/y3a2_griz_o.4096_t.32768_coverfoot_EQU.fits.gz'
+
+# Files containing the deep field data.
+deepFiles = ['/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000001.fits', 
+             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000002.fits', 
+             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000003.fits',
+             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000004.fits',
+             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000005.fits']
+
+deepCols = ['KNN_CLASS', 'RA', 'DEC', 'MASK_FLAGS', 'MASK_FLAGS_NIR']
+
+# Y3 Gold object original files.
+goldObjectsDir = '/hdfs/bechtol/balrog/y3/y3a2_gold_v2p2_skim/healpixel2/'
+goldObjectsFiles = listdir(goldObjectsDir)
+goldCols = ['FLAGS_FOREGROUND', 'FLAGS_BADREGIONS', 'FLAGS_FOOTPRINT', 'EXTENDED_CLASS_SOF', 'SOF_PSF_MAG_G', 'SOF_PSF_MAG_R', 'SOF_CM_MAG_G', 'SOF_CM_MAG_R', 'RA', 'DEC']

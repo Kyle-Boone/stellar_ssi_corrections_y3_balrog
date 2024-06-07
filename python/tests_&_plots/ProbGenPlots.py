@@ -27,7 +27,7 @@ res = strConfig.res
 numMagBins = 1
 numBins = strConfig.numBins
 classCutoff = strConfig.classCutoff
-goldCols = strConfig.goldCols
+goldCols = Config.goldCols
 gCut = strConfig.gCut
 magBins = [23.9, 24.5]
 cutOffPercent = strConfig.cutOffPercent
@@ -36,8 +36,8 @@ binNum = strConfig.binNum
 path = strConfig.path
 mu = strConfig.mu
 
-matBalrStarFile = strConfig.matBalrStarFile
-detBalrStarFile = strConfig.detBalrStarFile
+matBalrStarFile = Config.matBalrStarFile
+detBalrStarFile = Config.detBalrStarFile
 
 pixFile = strConfig.pixFile
 condFiles = strConfig.condFiles

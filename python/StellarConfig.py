@@ -50,7 +50,7 @@ def feh2z( feh):
 # Hyperparameter setup
 res = 4096 # Higher resolution for calculations.
 nsideCourse = 512 # Resolution for final corrections.
-numBins = 100 # Splitting up the full sky in calculations into this many pieces.
+numBins = 100 # Splitting up the full sky in calculations into this many pieces for full sky extension.
 classCutoff = 1.5 # Class cut between stars and galaxies.
 gCut = 27 # Cutoff for g magnitude.
 numMagBins = 3 # Number of magnitude bins.
@@ -73,8 +73,6 @@ stellarDir = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/Kyle_Stuff/Max
 
 # Valid pixels file and files for cropped survey properties.
 conditions = Config.conditions
-origCondFiles = Config.files[:-1]
-stelFile = Config.files[-1]
 pixFile = stellarDir + 'PixAndConds/Valid_Pixels.fits'
 condFiles = []
 for cond in conditions:
@@ -185,30 +183,5 @@ galaCorrectionFile = stellarDir + 'Correction/GalaxyCorrections.fits'
 calibrationFile = stellarDir + 'Calibration/Calibrations.fits'
 
 # Information on phoenix position.
-phoenixFile = stellarDir + 'Phoenix_Data.fits'
-
-# Files from here on contain raw data and are not written to.
-
-# Assorted data files.
-detBalrStarFile = '/afs/hep.wisc.edu/bechtol-group/MegansThings/balrog_detection_catalog_sof_run2_stars_v1.4_avg_added_match_flags.fits'
-matBalrStarFile = '/afs/hep.wisc.edu/bechtol-group/MegansThings/balrog_matched_catalog_sof_run2_stars_v1.4.fits'
-
-detBalrGalaFile = '/hdfs/bechtol/balrog/y3/balrog_detection_catalog_sof_y3-merged_v1.2.fits'
-matBalrGalaFile = '/hdfs/bechtol/balrog/y3/balrog_matched_catalog_sof_y3-merged_v1.2.fits'
-
-# FracDet File
-fracFile = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/fracdet/y3a2_griz_o.4096_t.32768_coverfoot_EQU.fits.gz'
-
-# Files containing the deep field data.
-deepFiles = ['/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000001.fits', 
-             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000002.fits', 
-             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000003.fits',
-             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000004.fits',
-             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000005.fits']
-
-deepCols = ['KNN_CLASS', 'RA', 'DEC', 'MASK_FLAGS', 'MASK_FLAGS_NIR']
-
-# Y3 Gold object original information.
-goldObjectsDir = '/hdfs/bechtol/balrog/y3/y3a2_gold_v2p2_skim/healpixel2/'
-goldObjectsFiles = listdir(goldObjectsDir)
-goldCols = ['FLAGS_FOREGROUND', 'FLAGS_BADREGIONS', 'FLAGS_FOOTPRINT', 'EXTENDED_CLASS_SOF', 'SOF_PSF_MAG_G', 'SOF_PSF_MAG_R', 'SOF_CM_MAG_G', 'SOF_CM_MAG_R', 'RA', 'DEC']
+phoenixFile = stellarDir + 'Phoenix_Pix.fits'
+backgroundFile = stellarDir + 'Background_Pix.fits'

@@ -32,7 +32,7 @@ galaDetAsStarProbFiles = strConfig.galaDetAsStarProbFiles
 galaDetAsGalaProbFiles = strConfig.galaDetAsGalaProbFiles
 
 # FracDet file
-fracFile = strConfig.fracFile
+fracFile = Config.fracFile
 
 # Calibration information
 calibrationFile = strConfig.calibrationFile
