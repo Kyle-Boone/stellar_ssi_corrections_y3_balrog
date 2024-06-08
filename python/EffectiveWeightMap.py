@@ -4,6 +4,7 @@ import astropy.io.fits as fits
 from astropy.table import Table
 import healpy as hp
 import StellarConfig as strConfig
+import Config
 
 # Where final correction info will be stored
 starCorrectionFile = strConfig.starCorrectionFile
