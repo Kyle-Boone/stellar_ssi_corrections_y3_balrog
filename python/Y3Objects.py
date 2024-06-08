@@ -9,6 +9,7 @@ import fitsio
 import astropy.io.fits as fits
 from astropy.table import Table
 import healpy as hp
+from matplotlib.path import Path
 
 def getY3Objects(pixFile, goldObjectsDir, goldObjectsFiles, goldCols, goldMoreInfoStarFiles, goldMoreInfoGalaFiles, goldStarFiles, goldGalaFiles, res, magBins, numMagBins, classCutoff, gCut, path, mu):
     '''
