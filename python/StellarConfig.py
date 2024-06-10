@@ -92,7 +92,7 @@ mk,iso=mkpol(mu,age,z,dmu=0.5,C=[0.01,0.1],E=2,err=err, survey="DES_Y3A2")
 path=Path(mk)
 
 # This will be the new directory with any new files in it.
-stellarDir = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/Kyle_Stuff/MaximumLikelihood/FinalPipeline/Test_Phoenix_Class_' + str(classCutoff) + '/'
+stellarDir = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/Kyle_Stuff/MaximumLikelihood/FinalPipeline/Phoenix_Class_' + str(classCutoff) + '/'
 
 # Valid pixels file and files for cropped survey properties.
 conditions = Config.conditions
