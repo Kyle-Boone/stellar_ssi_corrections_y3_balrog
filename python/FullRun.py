@@ -19,34 +19,34 @@ from CropSurveyProperties import *
 from GetObjects import *
 from Classification import *
 from Detection import *
+from Y3Objects import *
+from Calibration import *
 
 # Cycle limit for relative detection rate and classification probability calculations respectively.
-detIndLim = 300
-claIndLim = 150
+detIndLim = strConfig.detIndLim
+claIndLim = strConfig.claIndLim
 
 # Define hyperparameters.
 res = strConfig.res
+perCovered = strConfig.perCovered
 numMagBins = strConfig.numMagBins
 numBins = strConfig.numBins
 classCutoff = strConfig.classCutoff
-goldCols = strConfig.goldCols
 gCut = strConfig.gCut
 magBins = strConfig.magBins
 cutOffPercent = strConfig.cutOffPercent
 binNum = strConfig.binNum
-
-# Columns necessary from the deep fields.
-deepCols = strConfig.deepCols
+matchDist = strConfig.matchDist
 
 # Isochrone configuration.
 path = strConfig.path
 mu = strConfig.mu
 
 # Original balrog data files.
-matBalrGalaFile = strConfig.matBalrGalaFile
-detBalrGalaFile = strConfig.detBalrGalaFile
-matBalrStarFile = strConfig.matBalrStarFile
-detBalrStarFile = strConfig.detBalrStarFile
+matBalrGalaFile = Config.matBalrGalaFile
+detBalrGalaFile = Config.detBalrGalaFile
+matBalrStarFile = Config.matBalrStarFile
+detBalrStarFile = Config.detBalrStarFile
 
 # Galaxy information files.
 matGalaFile = strConfig.matGalaFile
@@ -57,11 +57,12 @@ matStarFile = strConfig.matStarFile
 detStarAllPosFile = strConfig.detStarAllPosFile
 
 # Originl deep field data.
-deepFiles = strConfig.deepFiles
+deepFiles = Config.deepFiles
+deepCols = Config.deepCols
 
 # Original survey property files.
-origCondFiles = strConfig.origCondFiles
-stelFile = strConfig.stelFile
+origCondFiles = Config.origCondFiles
+stelFile = Config.stelFile
 
 # Valid pixel and updated survey property files.
 pixFile = strConfig.pixFile
@@ -80,10 +81,6 @@ galaDetAsGalaExtrFiles = strConfig.galaDetAsGalaExtrFiles
 galaDetAsGalaTrainFiles = strConfig.galaDetAsGalaTrainFiles
 galaDetAsGalaProbFiles = strConfig.galaDetAsGalaProbFiles
 
-galaDetAsAnyExtrFiles = strConfig.galaDetAsAnyExtrFiles
-galaDetAsAnyTrainFiles = strConfig.galaDetAsAnyTrainFiles
-galaDetAsAnyProbFiles = strConfig.galaDetAsAnyProbFiles
-
 # Star correction files.
 starExtrFiles = strConfig.starExtrFiles
 starTrainFiles = strConfig.starTrainFiles
@@ -97,16 +94,13 @@ starDetAsGalaExtrFiles = strConfig.starDetAsGalaExtrFiles
 starDetAsGalaTrainFiles = strConfig.starDetAsGalaTrainFiles
 starDetAsGalaProbFiles = strConfig.starDetAsGalaProbFiles
 
-starDetAsAnyExtrFiles = strConfig.starDetAsAnyExtrFiles
-starDetAsAnyTrainFiles = strConfig.starDetAsAnyTrainFiles
-starDetAsAnyProbFiles = strConfig.starDetAsAnyProbFiles
-
 # Files with information on Y3 Gold objects.
+goldObjectsDir = Config.goldObjectsDir
+goldObjectsFiles = Config.goldObjectsFiles
+goldCols = Config.goldCols
+
 goldStarFiles = strConfig.goldStarFiles
 goldGalaFiles = strConfig.goldGalaFiles
-
-goldObjectsDir = strConfig.goldObjectsDir
-goldObjectsFiles = strConfig.goldObjectsFiles
 
 goldMoreInfoStarFiles = strConfig.goldMoreInfoStarFiles
 goldMoreInfoGalaFiles = strConfig.goldMoreInfoGalaFiles
@@ -115,7 +109,7 @@ goldMoreInfoGalaFiles = strConfig.goldMoreInfoGalaFiles
 calibrationFile = strConfig.calibrationFile
 
 # Get valid pixels and cropped survey properties.
-validPixCropData(origCondFiles, stelFile, pixFile, condFiles)
+validPixCropData(origCondFiles, stelFile, pixFile, condFiles, res, perCovered)
 
 validPix = fitsio.read(pixFile)['PIXEL']
 pixCheck = np.full(12*(res**2), False, dtype = bool)
@@ -278,148 +272,11 @@ for i in range(3):
         ext_table = Table()
         ext_table['EXTRAPOLATIONS'] = np.zeros(len(validPix))
         ext_table.write(galaDetAsGalaExtrFiles[i], overwrite = True)
-
-# The following is unnecessary for the pipeline but was used in producing a plot for the DES MWWG group meeting.
-# Star det as any
-# singleCorrectionTrainDet(detStarAllPosFile, matStarFile, condFiles, pixFile, magBins, starDetAsAnyTrainFiles, starDetAsAnyProbFiles, starDetAsAnyExtrFiles, numBins, res, True, 3.5, binNum, cutOffPercent, doFullSky = False, indLenLim = detIndLim)
-
-# fullSkyBool = [True, True, True]
-# for i in range(len(starDetAsAnyTrainFiles)):
-#     if loadtxt(starDetAsAnyTrainFiles[i][0:-5] + '_Indices.csv', delimiter=',').astype(int).size == 0:
-#         fullSkyBool[i] = False
-
-# for i in range(3):
-#     if fullSkyBool[i]:
-#         for j in range(50):
-#             fullSkyDet(pixFile, condFiles, np.array([starDetAsAnyTrainFiles[i]]), np.array([starDetAsAnyProbFiles[i]]), np.array([starDetAsAnyExtrFiles[i]]), res, numBins, startInd = startInds[j], endInd = endInds[j])
-#     else:
-#         aveDet = loadtxt(starDetAsAnyTrainFiles[i][0:-5] + '_Ave_Det.csv', delimiter=',')
-#         aveDet = 1 * aveDet
-
-#         prob_table = Table()
-#         prob_table['SIGNAL'] = aveDet * np.ones(len(validPix))
-#         prob_table.write(starDetAsAnyProbFiles[i], overwrite = True) 
-
-#         ext_table = Table()
-#         ext_table['EXTRAPOLATIONS'] = np.zeros(len(validPix))
-#         ext_table.write(starDetAsAnyExtrFiles[i], overwrite = True)
         
-# Gala det as any
-# singleCorrectionTrainDet(detGalaAllPosFile, matGalaFile, condFiles, pixFile, magBins, galaDetAsAnyTrainFiles, galaDetAsAnyProbFiles, galaDetAsAnyExtrFiles, numBins, res, True, 3.5, binNum, cutOffPercent, doFullSky = False, indLenLim = detIndLim)
+# Get Y3 Objects
 
-# fullSkyBool = [True, True, True]
-# for i in range(len(galaDetAsAnyTrainFiles)):
-#     if loadtxt(galaDetAsAnyTrainFiles[i][0:-5] + '_Indices.csv', delimiter=',').astype(int).size == 0:
-#         fullSkyBool[i] = False
-
-# for i in range(3):
-#     if fullSkyBool[i]:
-#         for j in range(50):
-#             fullSkyDet(pixFile, condFiles, np.array([galaDetAsAnyTrainFiles[i]]), np.array([galaDetAsAnyProbFiles[i]]), np.array([galaDetAsAnyExtrFiles[i]]), res, numBins, startInd = startInds[j], endInd = endInds[j])
-#     else:
-#         aveDet = loadtxt(galaDetAsAnyTrainFiles[i][0:-5] + '_Ave_Det.csv', delimiter=',')
-#         aveDet = 1 * aveDet
-
-#         prob_table = Table()
-#         prob_table['SIGNAL'] = aveDet * np.ones(len(validPix))
-#         prob_table.write(galaDetAsAnyProbFiles[i], overwrite = True) 
-
-#         ext_table = Table()
-#         ext_table['EXTRAPOLATIONS'] = np.zeros(len(validPix))
-#         ext_table.write(galaDetAsAnyExtrFiles[i], overwrite = True)
+getY3Objects(pixFile, goldObjectsDir, goldObjectsFiles, goldCols, goldMoreInfoStarFiles, goldMoreInfoGalaFiles, goldStarFiles, goldGalaFiles, res, magBins, numMagBins, classCutoff, gCut, path, mu)
         
 # Deep field calibrations.
 
-# Spatial matching.
-def findMatches(angleCutoff, RASource, DECSource, RAMatchCatalog, DECMatchCatalog, nthneighbor=1):
-    c = SkyCoord(ra=RASource*u.degree, dec=DECSource*u.degree)
-    catalog = SkyCoord(ra=RAMatchCatalog*u.degree, dec=DECMatchCatalog*u.degree)
-    idx, d2d, d3d = c.match_to_catalog_sky(catalog, nthneighbor=nthneighbor)
-    matches = d2d < angleCutoff
-    return matches, d2d
-
-deepRA = np.array([])
-deepDEC = np.array([])
-deepClass = np.array([])
-deepFlag = np.array([])
-deepFlagNir = np.array([])
-
-for deepFile in deepFiles:
-    deepData = fitsio.read(deepFile, columns = deepCols)
-
-    deepRA = np.append(deepRA, deepData['RA'])
-    deepDEC = np.append(deepDEC, deepData['DEC'])
-    deepClass = np.append(deepClass, deepData['KNN_CLASS'])
-    deepFlag = np.append(deepFlag, deepData['MASK_FLAGS'])
-    deepFlagNir = np.append(deepFlagNir, deepData['MASK_FLAGS_NIR'])
-
-deepFlagCuts = np.where((deepFlag == 0) &
-                        (deepFlagNir == 0) &
-                        (deepRA < 120) &
-                        (deepClass > 0) &
-                        (deepClass <= 3))[0]
-
-deepRA = deepRA[deepFlagCuts]
-deepDEC = deepDEC[deepFlagCuts]
-deepClass = deepClass[deepFlagCuts]
-
-if len(np.where(deepClass == 3)[0]) != 0:
-    print('WARNING: Objects with no class are present in this deep field selection. ' + str(len(np.where(deepClass == 3)[0])) + ' object(s) out of ' + str(len(deepClass)) + ' have an ambiguous classification.')
-
-deepPix = np.unique(hp.ang2pix(res, deepRA, deepDEC, lonlat = True, nest = True))
-
-deepPixCheck = np.full(12*(res**2), False, dtype = bool)
-deepPixCheck[deepPix] = True
-
-starAdjustments = []
-galaAdjustments = []
-
-for i in np.arange(len(goldMoreInfoStarFiles)):
-    allStarData = fitsio.read(goldMoreInfoStarFiles[i])
-    allStarRA = allStarData['RA']
-    allStarDEC = allStarData['DEC']
-    allStarPIX = hp.ang2pix(res, allStarRA, allStarDEC, lonlat = True, nest = True)
-    allStarRA = allStarRA[np.where(deepPixCheck[allStarPIX])[0]]
-    allStarDEC = allStarDEC[np.where(deepPixCheck[allStarPIX])[0]]
-    print(len(allStarRA))
-
-    allGalaData = fitsio.read(goldMoreInfoGalaFiles[i])
-    allGalaRA = allGalaData['RA']
-    allGalaDEC = allGalaData['DEC']
-    allGalaPIX = hp.ang2pix(res, allGalaRA, allGalaDEC, lonlat = True, nest = True)
-    allGalaRA = allGalaRA[np.where(deepPixCheck[allGalaPIX])[0]]
-    allGalaDEC = allGalaDEC[np.where(deepPixCheck[allGalaPIX])[0]]
-    print(len(allGalaRA))
-    
-    deepStarMatches, _ = findMatches(0.5*u.arcsec, deepRA, deepDEC, allStarRA, allStarDEC)
-    deepGalaMatches, _ = findMatches(0.5*u.arcsec, deepRA, deepDEC, allGalaRA, allGalaDEC)
-
-    matchedDeepStarRA = deepRA[deepStarMatches]
-    matchedDeepStarDEC = deepDEC[deepStarMatches]
-    matchedDeepStarClass = deepClass[deepStarMatches]
-
-    matchedDeepGalaRA = deepRA[deepGalaMatches]
-    matchedDeepGalaDEC = deepDEC[deepGalaMatches]
-    matchedDeepGalaClass = deepClass[deepGalaMatches]
-    
-    TSPIX = hp.ang2pix(res, matchedDeepStarRA[np.where(matchedDeepStarClass == 2)[0]], matchedDeepStarDEC[np.where(matchedDeepStarClass == 2)[0]], lonlat = True, nest = True)
-    FSPIX = hp.ang2pix(res, matchedDeepStarRA[np.where(matchedDeepStarClass == 1)[0]], matchedDeepStarDEC[np.where(matchedDeepStarClass == 1)[0]], lonlat = True, nest = True)
-
-    TGPIX = hp.ang2pix(res, matchedDeepGalaRA[np.where(matchedDeepGalaClass == 1)[0]], matchedDeepGalaDEC[np.where(matchedDeepGalaClass == 1)[0]], lonlat = True, nest = True)
-    FGPIX = hp.ang2pix(res, matchedDeepGalaRA[np.where(matchedDeepGalaClass == 2)[0]], matchedDeepGalaDEC[np.where(matchedDeepGalaClass == 2)[0]], lonlat = True, nest = True)
-    
-    starCorrProb = np.clip(fitsio.read(starProbFiles[i])['SIGNAL'], 0, 1)
-    fullStarProb = np.full(12*(res**2), hp.UNSEEN)
-    fullStarProb[validPix] = starCorrProb
-
-    galaCorrProb = np.clip(fitsio.read(galaProbFiles[i])['SIGNAL'], 0, 1)
-    fullGalaProb = np.full(12*(res**2), hp.UNSEEN)
-    fullGalaProb[validPix] = galaCorrProb
-    
-    starAdjustments.append(len(TSPIX) / (np.sum(fullStarProb[TSPIX[np.where(pixCheck[TSPIX])[0]]]) + np.sum(fullStarProb[FGPIX[np.where(pixCheck[FGPIX])[0]]])))   
-    galaAdjustments.append(len(TGPIX) / (np.sum(fullGalaProb[TGPIX[np.where(pixCheck[TGPIX])[0]]]) + np.sum(fullGalaProb[FSPIX[np.where(pixCheck[FSPIX])[0]]])))
-    
-caliTable = Table()
-caliTable['STAR'] = starAdjustments
-caliTable['GALA'] = galaAdjustments
-caliTable.write(calibrationFile, overwrite = True)
+calibrations(pixFile, calibrationFile, starProbFiles, galaProbFiles, goldMoreInfoStarFiles, goldMoreInfoGalaFiles, deepFiles, deepCols, res, matchDist)

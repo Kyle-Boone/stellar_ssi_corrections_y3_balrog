@@ -47,20 +47,45 @@ def feh2z( feh):
         return (1 - Y_p)/( (1 + c) + (1/ZX_solar) * 10**(-feh))
     
 
-# Hyperparameter setup
-res = 4096 # Resolution for corrections.
-numBins = 100 # Splitting up the full sky in calculations into this many pieces.
-classCutoff = 1.5 # Class cut between stars and galaxies.
-gCut = 27 # Cutoff for g magnitude.
-numMagBins = 3 # Number of magnitude bins.
-magBins = [0, 22.9, 23.9, 24.5] # r Band magnitude bins.
-cutOffPercent = 0.01 # All deviations have to be below this for training to end.
-binNum = 10 # Number of bins used to calculate out functions.
-    
-# Isochrone setup
+'''
+Hyperparameters:
+-----------
+res           : Healpixel nside resolution for calculations. Upper limit should be 4096.
+perCovered    : If res < 4096, this determines what percent of the healpixel nees to be covered by valid pixels at 4096 resolution to be considered valid.
+nsideCourse   : Healpixel nside resolution for final corrections. Lower resolutions improve stability of maximum likelihood step.
+fracPer       : FracDet cutoff for a nsideCourse resolution healpixel to be included.
+classCutoff   : Class cut between stars and galaxies.
+gCut          : Upper limit for g band magnitudes.
+numMagBins    : Number of magnitude bins.
+magBins       : r Band magnitude bins, should have length one more than numMagBins.
+binNum        : Number of bins used to find interpolation functions.
+cutOffPercent : Accuracy threshold to terminate training.
+detIndLim     : Cycle limit if accuracy threshold isn't met in detection rate training.
+claIndLim     : Cycle limit if accuracy threshold isn't met in classification rate training.
+numBins       : Number of spatial splits of full sky when calculating probabilities on full sky (larger values help prevent memory issues, no impact on final results).
+matchDist     : Arcsecond matching distance for deep field to wide field object matching.
+mu            : Stellar stream distance modulus.
+age           : Stellar stream age (Gyr).
+feh           : Stellar stream metallicity.
+'''
+res = 4096 
+perCovered = 0.5 
+nsideCourse = 512 
+fracPer = 0.5
+classCutoff = 1.5
+gCut = 27
+numMagBins = 3
+magBins = [0, 22.9, 23.9, 24.5]
+binNum = 10
+cutOffPercent = 0.01
+detIndLim = 300
+claIndLim = 150
+numBins = 100
+matchDist = 0.5
 mu = 16.2
-age=12.8
-feh=-2.5
+age = 12.8
+feh = -2.5
+
 z=feh2z(feh)
 
 mk,iso=mkpol(mu,age,z,dmu=0.5,C=[0.01,0.1],E=2,err=err, survey="DES_Y3A2")
@@ -71,8 +96,6 @@ stellarDir = '/hdfs/bechtol/balrog/y3/y3a2_survey_conditions_maps/Kyle_Stuff/Max
 
 # Valid pixels file and files for cropped survey properties.
 conditions = Config.conditions
-origCondFiles = Config.files[:-1]
-stelFile = Config.files[-1]
 pixFile = stellarDir + 'PixAndConds/Valid_Pixels.fits'
 condFiles = []
 for cond in conditions:
@@ -113,14 +136,6 @@ for i in np.arange(numMagBins):
     galaDetAsGalaExtrFiles.append(galaDir + 'Gala_Det_As_Gala_Extr_Bin' + str(i+1) + '.fits')
     galaDetAsGalaTrainFiles.append(galaDir + 'Gala_Det_As_Gala_Train_Bin' + str(i+1) + '.fits')
     galaDetAsGalaProbFiles.append(galaDir + 'Gala_Det_As_Gala_Prob_Bin' + str(i+1) + '.fits')
-
-galaDetAsAnyExtrFiles = []
-galaDetAsAnyTrainFiles =  []
-galaDetAsAnyProbFiles = []
-for i in np.arange(numMagBins):
-    galaDetAsAnyExtrFiles.append(galaDir + 'Gala_Det_As_Any_Extr_Bin' + str(i+1) + '.fits')
-    galaDetAsAnyTrainFiles.append(galaDir + 'Gala_Det_As_Any_Train_Bin' + str(i+1) + '.fits')
-    galaDetAsAnyProbFiles.append(galaDir + 'Gala_Det_As_Any_Prob_Bin' + str(i+1) + '.fits')
     
 # The following is a directory for training and probability data for the Balrog delta stars.
 starDir = stellarDir + 'Stars/'
@@ -148,14 +163,6 @@ for i in np.arange(numMagBins):
     starDetAsGalaExtrFiles.append(starDir + 'Star_Det_As_Gala_Extr_Bin' + str(i+1) + '.fits')
     starDetAsGalaTrainFiles.append(starDir + 'Star_Det_As_Gala_Train_Bin' + str(i+1) + '.fits')
     starDetAsGalaProbFiles.append(starDir + 'Star_Det_As_Gala_Prob_Bin' + str(i+1) + '.fits')
-
-starDetAsAnyExtrFiles = []
-starDetAsAnyTrainFiles =  []
-starDetAsAnyProbFiles = []
-for i in np.arange(numMagBins):
-    starDetAsAnyExtrFiles.append(starDir + 'Star_Det_As_Any_Extr_Bin' + str(i+1) + '.fits')
-    starDetAsAnyTrainFiles.append(starDir + 'Star_Det_As_Any_Train_Bin' + str(i+1) + '.fits')
-    starDetAsAnyProbFiles.append(starDir + 'Star_Det_As_Any_Prob_Bin' + str(i+1) + '.fits')
     
 # Files with information on gold objects.
 goldStarDir = stellarDir + 'GoldObjects/Stars/'
@@ -176,31 +183,12 @@ for i in np.arange(numMagBins):
     goldMoreInfoGalaFiles.append(goldGalaDir + 'More_Info_Bin' + str(i+1) + '.fits')
     
 # Overall multiplicative corrections on valid pix.
-correctionFile = stellarDir + 'Correction/MultiplicativeCorrections.fits'
+starCorrectionFile = stellarDir + 'Correction/StarCorrections.fits'
+galaCorrectionFile = stellarDir + 'Correction/GalaxyCorrections.fits'
 
 # Calibration information for different magnitude bins.
 calibrationFile = stellarDir + 'Calibration/Calibrations.fits'
 
-# Information on phoenix position.
-phoenixFile = stellarDir + 'Phoenix_Data.fits'
-
-# Assorted data files.
-detBalrStarFile = '/afs/hep.wisc.edu/bechtol-group/MegansThings/balrog_detection_catalog_sof_run2_stars_v1.4_avg_added_match_flags.fits'
-matBalrStarFile = '/afs/hep.wisc.edu/bechtol-group/MegansThings/balrog_matched_catalog_sof_run2_stars_v1.4.fits'
-
-detBalrGalaFile = '/hdfs/bechtol/balrog/y3/balrog_detection_catalog_sof_y3-merged_v1.2.fits'
-matBalrGalaFile = '/hdfs/bechtol/balrog/y3/balrog_matched_catalog_sof_y3-merged_v1.2.fits'
-
-# Files containing the deep field data.
-deepFiles = ['/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000001.fits', 
-             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000002.fits', 
-             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000003.fits',
-             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000004.fits',
-             '/hdfs/bechtol/balrog/y3_deep_fields/y3_deep_fields_catalog/deepfields_000005.fits']
-
-deepCols = ['KNN_CLASS', 'RA', 'DEC', 'MASK_FLAGS', 'MASK_FLAGS_NIR']
-
-# Y3 Gold object original information.
-goldObjectsDir = '/hdfs/bechtol/balrog/y3/y3a2_gold_v2p2_skim/healpixel2/'
-goldObjectsFiles = listdir(goldObjectsDir)
-goldCols = ['FLAGS_FOREGROUND', 'FLAGS_BADREGIONS', 'FLAGS_FOOTPRINT', 'EXTENDED_CLASS_SOF', 'SOF_PSF_MAG_G', 'SOF_PSF_MAG_R', 'SOF_CM_MAG_G', 'SOF_CM_MAG_R', 'RA', 'DEC']
+# Information on phoenix position, used for testing.
+phoenixFile = stellarDir + 'Phoenix_Pix.fits'
+backgroundFile = stellarDir + 'Background_Pix.fits'
