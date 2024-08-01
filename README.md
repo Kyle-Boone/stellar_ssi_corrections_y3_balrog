@@ -1,3 +1,5 @@
+# OUT OF DATE, GO TO REPO ssi_corrections_des_y3_balrog
+
 # stellar_ssi_corrections_y3_balrog
 
 This repository contains code that learns classification probabilities and relative detection rates for stars and galaxies using synthetic sources.
